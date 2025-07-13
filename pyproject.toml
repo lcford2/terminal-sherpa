@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ask"
+version = "0.1.0"
+description = "AI-powered bash command generator"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=0.7.0",
+    "black>=25.1.0",
+    "ruff>=0.12.3",
+    "toml>=0.10.0",
+]
+
+[project.scripts]
+ask = "main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*"]
+
+[tool.black]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    build
+    install
+    log
+)/
+'''
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+ignore = [ "D100", "D107", "D104", "COM812" ]
+select = [
+    # pycodestyle
+    "E",
+    "W",
+    # pyflakes
+    "F",
+    # isort
+    "I",
+    # flake8 quotes
+    "Q",
+    # flake8 commas
+    "COM",
+    # flake8 comprehensions
+    "C4",
+    # pydocstyle, uncomment
+    "D",
+    # pyupgrade
+    "UP",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"test/*.py" = ["D103"]
+
+[tool.coverage.run]
+source = ["ask"]
