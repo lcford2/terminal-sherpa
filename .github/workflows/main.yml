@@ -1,5 +1,4 @@
-# .github/workflows/pre-commit.yml
-name: Run pre-commit checks
+name: CI
 
 on:
   push:
@@ -8,7 +7,7 @@ on:
     branches: [main, master]
 
 jobs:
-  pre-commit:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,7 +22,15 @@ jobs:
       - name: Install pre-commit
         run: |
           python -m pip install --upgrade pip
-          pip install pre-commit
+          pip install .[test]
 
-      - name: Run pre-commit
-        run: pre-commit run --all-files
+      - name: Run tests with coverage
+        run: |
+          pytest --cov=ask --cov-report=xml
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
