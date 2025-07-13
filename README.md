@@ -1,19 +1,19 @@
-# ask
+# terminal-sherpa
 
 A lightweight AI chat interface for fellow terminal dwellers.
 
 Turn natural language into bash commands instantly.
 Stop googling syntax and start asking.
 
-[![codecov](https://codecov.io/github/lcford2/ask/graph/badge.svg?token=2MXHNL3RHE)](https://codecov.io/github/lcford2/ask)
+[![codecov](https://codecov.io/github/lcford2/terminal-sherpa/graph/badge.svg?token=2MXHNL3RHE)](https://codecov.io/github/lcford2/terminal-sherpa)
 
 ## 🚀 Getting Started
 
 Get up and running:
 
 ```bash
-# Install ask
-uv tool install ask
+# Install terminal-sherpa
+pip install terminal-sherpa # installs the `ask` CLI tool
 
 # Set your API key
 export ANTHROPIC_API_KEY="your-key-here"
@@ -43,20 +43,15 @@ find . -name "*.py" -mtime -7
 
 ### Install Methods
 
-**Recommended (uv):**
-```bash
-uv tool install ask
-```
-
 **Using pip:**
 ```bash
-pip install ask
+pip install terminal-sherpa
 ```
 
 **From source:**
 ```bash
-git clone https://github.com/lcford2/ask.git
-cd ask
+git clone https://github.com/lcford2/terminal-sherpa.git
+cd terminal-sherpa
 uv sync
 uv run ask "your prompt here"
 ```
@@ -195,7 +190,7 @@ max_tokens = 1024
 
 ### Setup
 ```bash
-git clone https://github.com/lcford2/ask.git
+git clone https://github.com/lcford2/terminal-sherpa.git
 cd ask
 uv sync
 uv run pre-commit install
