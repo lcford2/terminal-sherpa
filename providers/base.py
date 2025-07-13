@@ -1,13 +1,14 @@
 """Abstract base class for all providers."""
 
 from abc import ABC, abstractmethod
-from typing import Any
+
+from config import Config
 
 
 class ProviderInterface(ABC):
     """Abstract base class for all AI providers."""
 
-    def __init__(self, config: dict[str, Any]):
+    def __init__(self, config: Config):
         """Initialize provider with configuration."""
         self.config = config
 
@@ -23,6 +24,6 @@ class ProviderInterface(ABC):
 
     @classmethod
     @abstractmethod
-    def get_default_config(cls) -> dict[str, Any]:
+    def get_default_config(cls) -> Config:
         """Return default configuration for this provider."""
         pass

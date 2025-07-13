@@ -8,6 +8,15 @@ import toml
 
 from exceptions import ConfigurationError
 
+SYSTEM_PROMPT = (
+    "You are a bash command generator. Given a user request, "
+    "respond with ONLY the bash command that accomplishes the task. "
+    "Do not include explanations, comments, or any other text. "
+    "Just the command.",
+)
+
+Config = dict[str, Any]
+
 
 def get_config_path() -> Path | None:
     """Find config file using XDG standard."""
@@ -29,7 +38,7 @@ def get_config_path() -> Path | None:
     return None
 
 
-def load_config() -> dict[str, Any]:
+def load_config() -> Config:
     """Load configuration from TOML file."""
     config_path = get_config_path()
 
@@ -43,9 +52,7 @@ def load_config() -> dict[str, Any]:
         raise ConfigurationError(f"Failed to load config file {config_path}: {e}")
 
 
-def get_provider_config(
-    config: dict[str, Any], provider_spec: str
-) -> tuple[str, dict[str, Any]]:
+def get_provider_config(config: Config, provider_spec: str) -> tuple[str, Config]:
     """Parse provider:model syntax and return provider name and config."""
     if ":" in provider_spec:
         provider_name, model_name = provider_spec.split(":", 1)
@@ -70,7 +77,7 @@ def get_provider_config(
     return provider_name, merged_config
 
 
-def get_default_model(config: dict[str, Any]) -> str | None:
+def get_default_model(config: Config) -> str | None:
     """Get default model from configuration."""
     global_config = config.get("ask", {})
     return global_config.get("default_model")

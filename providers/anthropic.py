@@ -1,10 +1,10 @@
 """Anthropic provider implementation."""
 
 import os
-from typing import Any, NoReturn
 
 import anthropic
 
+from config import SYSTEM_PROMPT, Config
 from exceptions import APIError, AuthenticationError, RateLimitError
 
 from .base import ProviderInterface
@@ -13,7 +13,7 @@ from .base import ProviderInterface
 class AnthropicProvider(ProviderInterface):
     """Anthropic AI provider implementation."""
 
-    def __init__(self, config: dict[str, Any]):
+    def __init__(self, config: Config):
         """Initialize Anthropic provider with configuration."""
         super().__init__(config)
         self.client: anthropic.Anthropic | None = None
@@ -31,13 +31,7 @@ class AnthropicProvider(ProviderInterface):
                 model=self.config.get("model_name", "claude-3-haiku-20240307"),
                 max_tokens=self.config.get("max_tokens", 150),
                 temperature=self.config.get("temperature", 0.0),
-                system=self.config.get(
-                    "system_prompt",
-                    "You are a bash command generator. Given a user request, "
-                    "respond with ONLY the bash command that accomplishes the task. "
-                    "Do not include explanations, comments, or any other text. "
-                    "Just the command.",
-                ),
+                system=self.config.get("system_prompt", SYSTEM_PROMPT),
                 messages=[{"role": "user", "content": prompt}],
             )
             return response.content[0].text
@@ -56,7 +50,7 @@ class AnthropicProvider(ProviderInterface):
 
         self.client = anthropic.Anthropic(api_key=api_key)
 
-    def _handle_api_error(self, error: Exception) -> NoReturn:
+    def _handle_api_error(self, error: Exception):
         """Handle API errors and map them to standard exceptions."""
         error_str = str(error).lower()
 
@@ -68,17 +62,12 @@ class AnthropicProvider(ProviderInterface):
             raise APIError(f"Error: API request failed - {error}")
 
     @classmethod
-    def get_default_config(cls) -> dict[str, Any]:
+    def get_default_config(cls) -> Config:
         """Return default configuration for Anthropic provider."""
         return {
             "model_name": "claude-3-haiku-20240307",
             "max_tokens": 150,
             "api_key_env": "ANTHROPIC_API_KEY",
             "temperature": 0.0,
-            "system_prompt": (
-                "You are a bash command generator. Given a user request, "
-                "respond with ONLY the bash command that accomplishes the task. "
-                "Do not include explanations, comments, or any other text. "
-                "Just the command.",
-            ),
+            "system_prompt": SYSTEM_PROMPT,
         }
