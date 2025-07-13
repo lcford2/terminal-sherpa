@@ -5,6 +5,8 @@ A lightweight AI chat interface for fellow terminal dwellers.
 Turn natural language into bash commands instantly.
 Stop googling syntax and start asking.
 
+[![codecov](https://codecov.io/github/lcford2/ask/graph/badge.svg?token=2MXHNL3RHE)](https://codecov.io/github/lcford2/ask)
+
 ## 🚀 Getting Started
 
 Get up and running:
