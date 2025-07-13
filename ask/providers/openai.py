@@ -6,10 +6,9 @@ from typing import Any, NoReturn
 
 import openai
 
-from config import SYSTEM_PROMPT
-from exceptions import APIError, AuthenticationError, RateLimitError
-
-from .base import ProviderInterface
+from ask.config import SYSTEM_PROMPT
+from ask.exceptions import APIError, AuthenticationError, RateLimitError
+from ask.providers.base import ProviderInterface
 
 
 class OpenAIProvider(ProviderInterface):

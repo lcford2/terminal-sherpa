@@ -1,12 +1,13 @@
 import argparse
 import sys
+from typing import Any
 
 from loguru import logger
 
-import config
-import providers
-from exceptions import APIError, AuthenticationError, ConfigurationError
-from providers.base import ProviderInterface
+import ask.config as config
+import ask.providers as providers
+from ask.exceptions import APIError, AuthenticationError, ConfigurationError
+from ask.providers.base import ProviderInterface
 
 
 def configure_logging(verbose: bool) -> None:
@@ -36,7 +37,7 @@ def parse_arguments() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def load_configuration() -> config.Config:
+def load_configuration() -> dict[str, Any]:
     """Load configuration from file and environment."""
     try:
         return config.load_config()

@@ -16,7 +16,7 @@ def register_provider(name: str, provider_class: type[ProviderInterface]) -> Non
 def get_provider(name: str, config: dict) -> ProviderInterface:
     """Get a provider instance by name."""
     if name not in _PROVIDER_REGISTRY:
-        from exceptions import ConfigurationError
+        from ask.exceptions import ConfigurationError
 
         raise ConfigurationError(
             f"Provider '{name}' not found. Available providers: {list_providers()}"

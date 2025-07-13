@@ -6,7 +6,7 @@ from typing import Any
 
 import toml
 
-from exceptions import ConfigurationError
+from ask.exceptions import ConfigurationError
 
 SYSTEM_PROMPT = (
     "You are a bash command generator. Given a user request, "
@@ -14,8 +14,6 @@ SYSTEM_PROMPT = (
     "Do not include explanations, comments, or any other text. "
     "Just the command.",
 )
-
-Config = dict[str, Any]
 
 
 def get_config_path() -> Path | None:
@@ -38,7 +36,7 @@ def get_config_path() -> Path | None:
     return None
 
 
-def load_config() -> Config:
+def load_config() -> dict[str, Any]:
     """Load configuration from TOML file."""
     config_path = get_config_path()
 
@@ -52,7 +50,9 @@ def load_config() -> Config:
         raise ConfigurationError(f"Failed to load config file {config_path}: {e}")
 
 
-def get_provider_config(config: Config, provider_spec: str) -> tuple[str, Config]:
+def get_provider_config(
+    config: dict[str, Any], provider_spec: str
+) -> tuple[str, dict[str, Any]]:
     """Parse provider:model syntax and return provider name and config."""
     if ":" in provider_spec:
         provider_name, model_name = provider_spec.split(":", 1)
@@ -77,7 +77,7 @@ def get_provider_config(config: Config, provider_spec: str) -> tuple[str, Config
     return provider_name, merged_config
 
 
-def get_default_model(config: Config) -> str | None:
+def get_default_model(config: dict[str, Any]) -> str | None:
     """Get default model from configuration."""
     global_config = config.get("ask", {})
     return global_config.get("default_model")

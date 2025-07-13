@@ -1,19 +1,19 @@
 """Anthropic provider implementation."""
 
 import os
+from typing import Any
 
 import anthropic
 
-from config import SYSTEM_PROMPT, Config
-from exceptions import APIError, AuthenticationError, RateLimitError
-
-from .base import ProviderInterface
+from ask.config import SYSTEM_PROMPT
+from ask.exceptions import APIError, AuthenticationError, RateLimitError
+from ask.providers.base import ProviderInterface
 
 
 class AnthropicProvider(ProviderInterface):
     """Anthropic AI provider implementation."""
 
-    def __init__(self, config: Config):
+    def __init__(self, config: dict[str, Any]):
         """Initialize Anthropic provider with configuration."""
         super().__init__(config)
         self.client: anthropic.Anthropic | None = None
@@ -62,7 +62,7 @@ class AnthropicProvider(ProviderInterface):
             raise APIError(f"Error: API request failed - {error}")
 
     @classmethod
-    def get_default_config(cls) -> Config:
+    def get_default_config(cls) -> dict[str, Any]:
         """Return default configuration for Anthropic provider."""
         return {
             "model_name": "claude-3-haiku-20240307",
