@@ -24,7 +24,7 @@ jobs:
         run: uv sync
 
       - name: Run tests with coverage using UV
-        run: uv run pytest --cov=ask --cov-report=xml
+        run: uv run pytest -s -v --cov=ask --cov-report=xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
