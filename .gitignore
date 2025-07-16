@@ -8,3 +8,17 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Mutation testing artifacts
+mutation.sqlite
+mutation_reports/
+.mutatest_cache/
+
+# testing
+.coverage
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+
+# other caches
+.mypy_cache/

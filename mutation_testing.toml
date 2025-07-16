@@ -1,0 +1,18 @@
+[cosmic-ray]
+module-path = "ask"
+timeout = 30.0
+excluded-modules = []
+test-command = "pytest test/"
+
+[cosmic-ray.distributor]
+name = "local"
+
+[cosmic-ray.filters.operators-filter]
+exclude-operators = [
+    "core/ReplaceBinaryOperator_BitOr_BitAnd",
+    "core/ReplaceBinaryOperator_BitOr_BitXor",
+    "core/ReplaceBinaryOperator_BitAnd_BitOr",
+    "core/ReplaceBinaryOperator_BitXor_BitOr",
+    "core/ReplaceBinaryOperator_BitOr_Add",
+    "core/ReplaceBinaryOperator_BitOr_Sub",
+]

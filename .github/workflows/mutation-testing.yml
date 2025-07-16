@@ -1,0 +1,91 @@
+name: Mutation Testing
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  # Allow manual triggering
+  workflow_dispatch:
+
+jobs:
+  mutation-testing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    permissions:
+      contents: read    # Required to checkout repository
+      issues: write     # Required to comment on pull requests
+      pull-requests: write  # Required for PR operations
+      actions: read     # Required for Actions
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Install UV
+      uses: astral-sh/setup-uv@v6
+      with:
+        enable-cache: true
+        cache-dependency-glob: "uv.lock"
+
+    - name: Install dependencies
+      run: uv sync
+
+    - name: Run mutation testing
+      run: uv run task mutation-test
+
+    - name: Upload mutation testing reports
+      uses: actions/upload-artifact@v4
+      if: always()  # Upload reports even if mutation testing fails
+      with:
+        name: mutation-testing-reports
+        path: mutation_reports/
+        retention-days: 30
+
+    - name: Check if mutation_reports/report.txt exists
+      if: github.event_name == 'pull_request'
+      id: check_file
+      run: |
+        if [ -f "mutation_reports/report.txt" ]; then
+          echo "file_exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "file_exists=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Get last 5 lines of mutation_reports/report.txt
+      if: steps.check_file.outputs.file_exists == 'true' && github.event_name == 'pull_request'
+      id: get_lines
+      run: |
+        # Get last 5 lines and format for GitHub comment
+        echo "output<<EOF" >> $GITHUB_OUTPUT
+        echo "\`\`\`" >> $GITHUB_OUTPUT
+        tail -n 5 mutation_reports/report.txt >> $GITHUB_OUTPUT
+        echo "\`\`\`" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: Comment on PR
+      if: steps.check_file.outputs.file_exists == 'true' && github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '## 🧬 Mutation Testing Results\n\n${{ steps.get_lines.outputs.output }}\n\n📊 [View detailed HTML report](https://github.com/' + context.repo.owner + '/' + context.repo.repo + '/actions/runs/' + context.runId + ')'
+          })
+
+    - name: Comment if file doesn't exist
+      if: steps.check_file.outputs.file_exists == 'false' && github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '⚠️ **output.txt not found** - No output to display'
+          })
