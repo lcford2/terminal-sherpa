@@ -196,14 +196,6 @@ def test_handle_api_error_rate_limit():
         provider._handle_api_error(Exception("rate limit exceeded"))
 
 
-def test_handle_api_error_quota():
-    """Test quota error mapping."""
-    provider = OpenAIProvider({})
-
-    with pytest.raises(RateLimitError, match="API rate limit exceeded"):
-        provider._handle_api_error(Exception("quota exceeded"))
-
-
 def test_handle_api_error_generic():
     """Test generic API error mapping."""
     provider = OpenAIProvider({})

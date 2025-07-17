@@ -76,11 +76,11 @@ jobs:
             repo: context.repo.repo,
             body: `## 🧬 Mutation Testing Results
 
-                  \`\`\`
-                  ${process.env.MUTATION_OUTPUT}
-                  \`\`\`
+            \`\`\`
+            ${process.env.MUTATION_OUTPUT}
+            \`\`\`
 
-                  📊 [View detailed HTML report](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`
+            📊 [View detailed HTML report](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`
           })
 
     - name: Comment if file doesn't exist
