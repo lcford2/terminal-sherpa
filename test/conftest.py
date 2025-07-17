@@ -39,6 +39,13 @@ def mock_anthropic_key():
 
 
 @pytest.fixture
+def mock_gemini_key():
+    """Mock Gemini API key in environment."""
+    with patch.dict(os.environ, {"GEMINI_API_KEY": "test-gemini-key"}, clear=True):
+        yield
+
+
+@pytest.fixture
 def mock_openai_key():
     """Mock OpenAI API key in environment."""
     with patch.dict(os.environ, {"OPENAI_API_KEY": "test-openai-key"}, clear=True):
