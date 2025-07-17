@@ -53,15 +53,13 @@ jobs:
           echo "file_exists=false" >> $GITHUB_OUTPUT
         fi
 
-    - name: Get last 5 lines of mutation_reports/report.txt
+    - name: Get last 3 lines of mutation_reports/report.txt
       if: steps.check_file.outputs.file_exists == 'true' && github.event_name == 'pull_request'
       id: get_lines
       run: |
-        # Get last 5 lines and format for GitHub comment
+        # Get last 3 lines and format for GitHub comment
         echo "output<<EOF" >> $GITHUB_OUTPUT
-        echo "\`\`\`" >> $GITHUB_OUTPUT
-        tail -n 5 mutation_reports/report.txt >> $GITHUB_OUTPUT
-        echo "\`\`\`" >> $GITHUB_OUTPUT
+        tail -n 3 mutation_reports/report.txt >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
 
     - name: Comment on PR
@@ -78,7 +76,9 @@ jobs:
             repo: context.repo.repo,
             body: `## 🧬 Mutation Testing Results
 
+                  \`\`\`
                   ${process.env.MUTATION_OUTPUT}
+                  \`\`\`
 
                   📊 [View detailed HTML report](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`
           })
