@@ -23,6 +23,7 @@ ask "find all .py files modified in the last week"
 ```
 
 **Example output:**
+
 ```bash
 find . -name "*.py" -mtime -7
 ```
@@ -38,17 +39,20 @@ find . -name "*.py" -mtime -7
 ## 📦 Installation
 
 ### Requirements
+
 - Python 3.13+
 - API key for Anthropic or OpenAI
 
 ### Install Methods
 
 **Using pip:**
+
 ```bash
 pip install terminal-sherpa
 ```
 
 **From source:**
+
 ```bash
 git clone https://github.com/lcford2/terminal-sherpa.git
 cd terminal-sherpa
@@ -57,6 +61,7 @@ uv run ask "your prompt here"
 ```
 
 **Verify installation:**
+
 ```bash
 ask --help
 ```
@@ -64,20 +69,22 @@ ask --help
 ## 💡 Usage
 
 ### Basic Syntax
+
 ```bash
 ask "your natural language prompt"
 ```
 
 ### Command Options
 
-| Option | Description | Example |
-|--------|-------------|---------|
+| Option                   | Description                | Example                                             |
+| ------------------------ | -------------------------- | --------------------------------------------------- |
 | `--model provider:model` | Specify provider and model | `ask --model anthropic:claude-3-haiku "list files"` |
-| `--verbose` | Enable verbose logging | `ask --verbose "compress this folder"` |
+| `--verbose`              | Enable verbose logging     | `ask --verbose "compress this folder"`              |
 
 ### Practical Examples
 
 **File Operations:**
+
 ```bash
 ask "find all files larger than 100MB"
 # Example output: find . -size +100M
@@ -87,6 +94,7 @@ ask "create a backup of config.txt with timestamp"
 ```
 
 **Git Commands:**
+
 ```bash
 ask "show git log for last 5 commits with one line each"
 # Example output: git log --oneline -5
@@ -96,6 +104,7 @@ ask "delete all local branches that have been merged"
 ```
 
 **System Administration:**
+
 ```bash
 ask "check disk usage of current directory sorted by size"
 # Example output: du -sh * | sort -hr
@@ -105,6 +114,7 @@ ask "find processes using port 8080"
 ```
 
 **Text Processing:**
+
 ```bash
 ask "count lines in all Python files"
 # Example output: find . -name "*.py" -exec wc -l {} + | tail -1
@@ -114,6 +124,7 @@ ask "replace all tabs with spaces in file.txt"
 ```
 
 **Network Operations:**
+
 ```bash
 ask "download file from URL and save to downloads folder"
 # Example output: curl -o ~/Downloads/filename "https://example.com/file"
@@ -125,6 +136,7 @@ ask "check if port 443 is open on example.com"
 ## ⚙️ Configuration
 
 ### Configuration File Locations
+
 Ask follows XDG Base Directory Specification:
 
 1. `$XDG_CONFIG_HOME/ask/config.toml`
@@ -132,12 +144,14 @@ Ask follows XDG Base Directory Specification:
 1. `~/.ask/config.toml` (fallback)
 
 ### Environment Variables
+
 ```bash
 export ANTHROPIC_API_KEY="your-anthropic-key"
 export OPENAI_API_KEY="your-openai-key"
 ```
 
 ### Example Configuration File
+
 Create `~/.config/ask/config.toml`:
 
 ```toml
@@ -169,18 +183,21 @@ max_tokens = 1024
 ## 🛣️ Roadmap
 
 ### Near-term
+
 - [ ] Shell integration and auto-completion
 - [ ] Command history and favorites
 - [ ] Safety features (command preview/confirmation)
 - [ ] Output formatting options
 
 ### Medium-term
+
 - [ ] Additional providers (Google, Cohere, Mistral)
 - [ ] Interactive mode for complex tasks
 - [ ] Plugin system for custom providers
 - [ ] Command validation and testing
 
 ### Long-term
+
 - [ ] Local model support (Ollama, llama.cpp)
 - [ ] Learning from user preferences
 - [ ] Advanced safety and sandboxing
@@ -189,6 +206,7 @@ max_tokens = 1024
 ## 🔧 Development
 
 ### Setup
+
 ```bash
 git clone https://github.com/lcford2/terminal-sherpa.git
 cd ask
@@ -197,11 +215,13 @@ uv run pre-commit install
 ```
 
 ### Testing
+
 ```bash
 uv run python -m pytest
 ```
 
 ### Contributing
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes

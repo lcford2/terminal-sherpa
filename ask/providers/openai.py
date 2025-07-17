@@ -62,6 +62,7 @@ class OpenAIProvider(ProviderInterface):
                 return re_match.group(1)
         except Exception as e:
             self._handle_api_error(e)
+            return ""
 
     def validate_config(self) -> None:
         """Validate provider configuration and API key."""

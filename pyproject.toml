@@ -11,20 +11,29 @@ requires-python = ">=3.13"
 dependencies = [
     "anthropic>=0.7.0",
     "black>=25.1.0",
+    "cosmic-ray>=8.3.4",
     "loguru>=0.7.0",
+    "mutatest>=3.1.0",
     "openai>=1.0.0",
     "pytest>=8.0.0",
     "pytest-cov>=4.0.0",
     "pytest-mock>=3.12.0",
     "ruff>=0.12.3",
+    "setuptools>=80.9.0",
+    "taskipy>=1.14.1",
     "toml>=0.10.0",
 ]
 
 [project.scripts]
 ask = "ask.main:main"
 
+[tool.taskipy.tasks]
+test = "pytest test/ --cov=ask --cov-report=html --cov-report=term"
+mutation-test = "scripts/run_mutation_testing.sh"
+setup = "pre-commit install"
+install = "uv sync"
+
 [tool.setuptools.packages.find]
-# where = ["ask"]
 include = ["*"]
 
 [tool.black]
