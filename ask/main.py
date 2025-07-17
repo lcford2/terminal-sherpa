@@ -76,10 +76,11 @@ def resolve_provider(args, config_data) -> ProviderInterface:
             # Use default provider from environment variables
             default_provider = config.get_default_provider()
             if not default_provider:
+                keys = ["GEMINI_API_KEY", "ANTHROPIC_API_KEY", "OPENAI_API_KEY"]
                 logger.error(
                     "No default model configured and no API keys found. "
-                    "Please set ANTHROPIC_API_KEY or OPENAI_API_KEY environment "
-                    "variable, or set a default_provider in your config file."
+                    f"Please set one or more of {keys} environment variables, "
+                    "or set a default_provider in your config file."
                 )
                 sys.exit(1)
             logger.debug(f"Using default provider from environment: {default_provider}")

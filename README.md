@@ -31,7 +31,7 @@ find . -name "*.py" -mtime -7
 ## ✨ Features
 
 - **Natural language to bash conversion** - Describe what you want, get the command
-- **Multiple AI provider support** - Choose between Anthropic (Claude) and OpenAI (GPT) models
+- **Multiple AI provider support** - Choose between Anthropic (Claude), OpenAI (GPT), and Google (Gemini) models
 - **Flexible configuration system** - Set defaults, customize models, and manage API keys
 - **XDG-compliant config files** - Follows standard configuration file locations
 - **Verbose logging support** - Debug and understand what's happening under the hood
@@ -79,6 +79,7 @@ ask "your natural language prompt"
 | Option                   | Description                | Example                                             |
 | ------------------------ | -------------------------- | --------------------------------------------------- |
 | `--model provider:model` | Specify provider and model | `ask --model anthropic:claude-3-haiku "list files"` |
+|                          |                            | `ask --model gemini:gemini-2.5-flash "list files"` |
 | `--verbose`              | Enable verbose logging     | `ask --verbose "compress this folder"`              |
 
 ### Practical Examples
@@ -148,6 +149,7 @@ Ask follows XDG Base Directory Specification:
 ```bash
 export ANTHROPIC_API_KEY="your-anthropic-key"
 export OPENAI_API_KEY="your-openai-key"
+export GEMINI_API_KEY="your-gemini-key"
 ```
 
 ### Example Configuration File
@@ -159,7 +161,6 @@ Create `~/.config/ask/config.toml`:
 default_model = "anthropic"
 
 [anthropic]
-api_key = "your-anthropic-key"
 model = "claude-3-haiku-20240307"
 max_tokens = 512
 
@@ -168,8 +169,15 @@ model = "claude-3-5-sonnet-20241022"
 max_tokens = 1024
 
 [openai]
-api_key = "your-openai-key"
 model = "gpt-4o"
+max_tokens = 1024
+
+[gemini]
+model = "gemini-2.5-flash"
+max_tokens = 150
+
+[gemini.pro]
+model = "gemini-2.5-pro"
 max_tokens = 1024
 ```
 
@@ -177,8 +185,9 @@ max_tokens = 1024
 
 - Anthropic (Claude)
 - OpenAI (GPT)
+- Google (Gemini)
 
-> **Note:** Get API keys from [Anthropic Console](https://console.anthropic.com/) or [OpenAI Platform](https://platform.openai.com/)
+> **Note:** Get API keys from [Anthropic Console](https://console.anthropic.com/), [OpenAI Platform](https://platform.openai.com/), or [Google AI Studio](https://aistudio.google.com/)
 
 ## 🛣️ Roadmap
 
