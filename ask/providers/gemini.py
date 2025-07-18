@@ -1,7 +1,7 @@
 """Anthropic provider implementation."""
 
 import os
-from typing import Any
+from typing import Any, Optional
 
 from google import genai
 from google.genai.types import GenerateContentConfig, GenerateContentResponse
@@ -17,7 +17,7 @@ class GeminiProvider(ProviderInterface):
     def __init__(self, config: dict[str, Any]):
         """Initialize Gemini provider with configuration."""
         super().__init__(config)
-        self.client: genai.Client | None = None
+        self.client: Optional[genai.Client] = None
 
     def _parse_response(self, response: GenerateContentResponse) -> str:
         """Parse response from Gemini API."""

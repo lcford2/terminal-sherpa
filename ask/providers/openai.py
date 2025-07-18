@@ -2,7 +2,7 @@
 
 import os
 import re
-from typing import Any, NoReturn
+from typing import Any, NoReturn, Optional
 
 import openai
 
@@ -21,7 +21,7 @@ class OpenAIProvider(ProviderInterface):
             config: The configuration for the OpenAI provider
         """
         super().__init__(config)
-        self.client: openai.OpenAI | None = None
+        self.client: Optional[openai.OpenAI] = None
 
     def get_bash_command(self, prompt: str) -> str:
         """Generate bash command from natural language prompt.
