@@ -2,7 +2,7 @@
 
 import os
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import toml
 
@@ -16,7 +16,7 @@ SYSTEM_PROMPT = (
 )
 
 
-def get_config_path() -> Path | None:
+def get_config_path() -> Optional[Path]:
     """Find config file using XDG standard."""
     # Primary location: $XDG_CONFIG_HOME/ask/config.toml
     xdg_config_home = os.environ.get("XDG_CONFIG_HOME")
@@ -77,13 +77,13 @@ def get_provider_config(
     return provider_name, merged_config
 
 
-def get_default_model(config: dict[str, Any]) -> str | None:
+def get_default_model(config: dict[str, Any]) -> Optional[str]:
     """Get default model from configuration."""
     global_config = config.get("ask", {})
     return global_config.get("default_model")
 
 
-def get_default_provider() -> str | None:
+def get_default_provider() -> Optional[str]:
     """Determine fallback provider from environment variables."""
     # Check for API keys in order of preference: claude -> openai
     if os.environ.get("ANTHROPIC_API_KEY"):

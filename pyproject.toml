@@ -7,23 +7,31 @@ name = "terminal-sherpa"
 version = "0.2.0"
 description = "AI-powered bash command generator"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.9"
 dependencies = [
     "anthropic>=0.7.0",
-    "black>=25.1.0",
-    "cosmic-ray>=8.3.4",
     "google-genai>=1.26.0",
     "loguru>=0.7.0",
-    "mutatest>=3.1.0",
     "openai>=1.0.0",
+    "setuptools>=80.9.0",
+    "toml>=0.10.0",
+]
+
+[dependency-groups]
+dev = [
+    "taskipy>=1.14.1",
+    "black>=25.1.0",
+    "ruff>=0.12.3",
     "pytest>=8.0.0",
     "pytest-cov>=4.0.0",
     "pytest-mock>=3.12.0",
-    "ruff>=0.12.3",
-    "setuptools>=80.9.0",
-    "taskipy>=1.14.1",
-    "toml>=0.10.0",
+    "cosmic-ray>=8.3.4",
+    "mutatest>=3.1.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/lcford2/terminal-sherpa"
+Issues = "https://github.com/lcford2/terminal-sherpa/issues"
 
 [project.scripts]
 ask = "ask.main:main"

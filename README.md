@@ -40,7 +40,7 @@ find . -name "*.py" -mtime -7
 
 ### Requirements
 
-- Python 3.13+
+- Python 3.9+
 - API key for Anthropic or OpenAI
 
 ### Install Methods
