@@ -5,6 +5,10 @@ A lightweight AI chat interface for fellow terminal dwellers.
 Turn natural language into bash commands instantly.
 Stop googling syntax and start asking.
 
+[![PyPI - Version](https://img.shields.io/pypi/v/terminal-sherpa)](https://pypi.python.org/pypi/terminal-sherpa)
+[![GitHub License](https://img.shields.io/github/license/lcford2/terminal-sherpa)](https://github.com/lcford2/terminal-sherpa/blob/main/LICENSE)
+[![Python Versions](https://img.shields.io/pypi/pyversions/terminal-sherpa)](https://pypi.python.org/pypi/terminal-sherpa)
+[![Actions status](https://github.com/lcford2/terminal-sherpa/actions/workflows/main.yml/badge.svg)](https://github.com/lcford2/terminal-sherpa/actions)
 [![codecov](https://codecov.io/github/lcford2/terminal-sherpa/graph/badge.svg?token=2MXHNL3RHE)](https://codecov.io/github/lcford2/terminal-sherpa)
 
 ## 🚀 Getting Started
