@@ -35,7 +35,7 @@ find . -name "*.py" -mtime -7
 ## ✨ Features
 
 - **Natural language to bash conversion** - Describe what you want, get the command
-- **Multiple AI provider support** - Choose between Anthropic (Claude), OpenAI (GPT), and Google (Gemini) models
+- **Multiple AI provider support** - Choose between Anthropic (Claude), OpenAI (GPT), Google (Gemini), and xAI (Grok) models
 - **Flexible configuration system** - Set defaults, customize models, and manage API keys
 - **XDG-compliant config files** - Follows standard configuration file locations
 - **Verbose logging support** - Debug and understand what's happening under the hood
@@ -45,7 +45,7 @@ find . -name "*.py" -mtime -7
 ### Requirements
 
 - Python 3.9+
-- API key for Anthropic or OpenAI
+- API key for Anthropic, OpenAI, Google, or xAI
 
 ### Install Methods
 
@@ -82,8 +82,12 @@ ask "your natural language prompt"
 
 | Option                   | Description                | Example                                             |
 | ------------------------ | -------------------------- | --------------------------------------------------- |
-| `--model provider:model` | Specify provider and model | `ask --model anthropic:claude-3-haiku "list files"` |
-|                          |                            | `ask --model gemini:gemini-2.5-flash "list files"` |
+| `--model provider:model` | Specify provider and model | `ask --model anthropic "list files"` |
+|                          |                            | `ask --model anthropic:sonnet "list files"`  |
+|                          |                            | `ask --model openai "list files"`            |
+|                          |                            | `ask --model gemini "list files"`                |
+|                          |                            | `ask --model gemini:pro "list files"`                |
+|                          |                            | `ask --model grok "list files"`                |
 | `--verbose`              | Enable verbose logging     | `ask --verbose "compress this folder"`              |
 
 ### Practical Examples
@@ -154,6 +158,7 @@ Ask follows XDG Base Directory Specification:
 export ANTHROPIC_API_KEY="your-anthropic-key"
 export OPENAI_API_KEY="your-openai-key"
 export GEMINI_API_KEY="your-gemini-key"
+export XAI_API_KEY="your-xai-key"
 ```
 
 ### Example Configuration File
@@ -169,7 +174,7 @@ model = "claude-3-haiku-20240307"
 max_tokens = 512
 
 [anthropic.sonnet]
-model = "claude-3-5-sonnet-20241022"
+model = "claude-sonnet-4-20250514"
 max_tokens = 1024
 
 [openai]
@@ -177,12 +182,17 @@ model = "gpt-4o"
 max_tokens = 1024
 
 [gemini]
-model = "gemini-2.5-flash"
+model = "gemini-2.5-flash-lite-preview-06-17"
 max_tokens = 150
 
 [gemini.pro]
 model = "gemini-2.5-pro"
 max_tokens = 1024
+
+[grok]
+model = "grok-3-fast"
+max_tokens = 150
+temperature = 0.0
 ```
 
 ## 🤖 Supported Providers
@@ -190,31 +200,15 @@ max_tokens = 1024
 - Anthropic (Claude)
 - OpenAI (GPT)
 - Google (Gemini)
+- xAI (Grok)
 
-> **Note:** Get API keys from [Anthropic Console](https://console.anthropic.com/), [OpenAI Platform](https://platform.openai.com/), or [Google AI Studio](https://aistudio.google.com/)
+> **Note:** Get API keys from [Anthropic Console](https://console.anthropic.com/), [OpenAI Platform](https://platform.openai.com/), [Google AI Studio](https://aistudio.google.com/), or [xAI Console](https://x.ai/console)
 
 ## 🛣️ Roadmap
 
-### Near-term
-
 - [ ] Shell integration and auto-completion
-- [ ] Command history and favorites
-- [ ] Safety features (command preview/confirmation)
-- [ ] Output formatting options
-
-### Medium-term
-
-- [ ] Additional providers (Google, Cohere, Mistral)
-- [ ] Interactive mode for complex tasks
-- [ ] Plugin system for custom providers
-- [ ] Command validation and testing
-
-### Long-term
-
+- [ ] Additional providers (Cohere, Mistral)
 - [ ] Local model support (Ollama, llama.cpp)
-- [ ] Learning from user preferences
-- [ ] Advanced safety and sandboxing
-- [ ] GUI and web interface options
 
 ## 🔧 Development
 
@@ -223,7 +217,7 @@ max_tokens = 1024
 ```bash
 git clone https://github.com/lcford2/terminal-sherpa.git
 cd ask
-uv sync
+uv sync --all-groups
 uv run pre-commit install
 ```
 
@@ -239,15 +233,12 @@ uv run python -m pytest
 2. Create a feature branch
 3. Make your changes
 4. Run pre-commit checks: `uv run pre-commit run --all-files`
+5. Run tests: `uv run task test`
 5. Submit a pull request
 
 ## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Contributing
-
-Contributions are welcome! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details.
 
 ## Issues
 

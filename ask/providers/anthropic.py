@@ -1,7 +1,7 @@
 """Anthropic provider implementation."""
 
 import os
-from typing import Any, Optional
+from typing import Any
 
 import anthropic
 
@@ -16,7 +16,7 @@ class AnthropicProvider(ProviderInterface):
     def __init__(self, config: dict[str, Any]):
         """Initialize Anthropic provider with configuration."""
         super().__init__(config)
-        self.client: Optional[anthropic.Anthropic] = None
+        self.client: anthropic.Anthropic | None = None
 
     def get_bash_command(self, prompt: str) -> str:
         """Generate bash command from natural language prompt."""

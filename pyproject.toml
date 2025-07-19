@@ -7,7 +7,7 @@ name = "terminal-sherpa"
 version = "0.3.0"
 description = "AI-powered bash command generator"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.10"
 dependencies = [
     "anthropic>=0.7.0",
     "google-genai>=1.26.0",
@@ -15,6 +15,7 @@ dependencies = [
     "openai>=1.0.0",
     "setuptools>=80.9.0",
     "toml>=0.10.0",
+    "xai-sdk",
 ]
 classifiers = [
   "Development Status :: 4 - Beta",
