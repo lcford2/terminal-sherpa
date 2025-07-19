@@ -80,15 +80,15 @@ ask "your natural language prompt"
 
 ### Command Options
 
-| Option                   | Description                | Example                                             |
-| ------------------------ | -------------------------- | --------------------------------------------------- |
-| `--model provider:model` | Specify provider and model | `ask --model anthropic "list files"` |
-|                          |                            | `ask --model anthropic:sonnet "list files"`  |
-|                          |                            | `ask --model openai "list files"`            |
-|                          |                            | `ask --model gemini "list files"`                |
-|                          |                            | `ask --model gemini:pro "list files"`                |
-|                          |                            | `ask --model grok "list files"`                |
-| `--verbose`              | Enable verbose logging     | `ask --verbose "compress this folder"`              |
+| Option                   | Description                | Example                                     |
+| ------------------------ | -------------------------- | ------------------------------------------- |
+| `--model provider:model` | Specify provider and model | `ask --model anthropic "list files"`        |
+|                          |                            | `ask --model anthropic:sonnet "list files"` |
+|                          |                            | `ask --model openai "list files"`           |
+|                          |                            | `ask --model gemini "list files"`           |
+|                          |                            | `ask --model gemini:pro "list files"`       |
+|                          |                            | `ask --model grok "list files"`             |
+| `--verbose`              | Enable verbose logging     | `ask --verbose "compress this folder"`      |
 
 ### Practical Examples
 
@@ -234,7 +234,7 @@ uv run python -m pytest
 3. Make your changes
 4. Run pre-commit checks: `uv run pre-commit run --all-files`
 5. Run tests: `uv run task test`
-5. Submit a pull request
+6. Submit a pull request
 
 ## License
 
