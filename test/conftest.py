@@ -53,6 +53,13 @@ def mock_openai_key():
 
 
 @pytest.fixture
+def mock_grok_key():
+    """Mock Grok API key in environment."""
+    with patch.dict(os.environ, {"XAI_API_KEY": "test-grok-key"}, clear=True):
+        yield
+
+
+@pytest.fixture
 def mock_both_keys():
     """Mock both API keys in environment."""
     with patch.dict(
