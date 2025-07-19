@@ -1,0 +1,98 @@
+name: Publish to PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  id-token: write  # Required for OIDC trusted publishing
+  contents: write  # Required for release notes generation
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
+          python-version: "3.11"
+
+      - name: Install dependencies with UV
+        run: uv sync
+
+      - name: Build package
+        run: uv build
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+      - name: Generate release notes
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: release } = await github.rest.repos.getRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: context.payload.release.id
+            });
+
+            const { data: tags } = await github.rest.repos.listTags({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 2
+            });
+
+            let previousTag = null;
+            if (tags.length > 1) {
+              previousTag = tags[1].name;
+            }
+
+            let compareUrl;
+            if (previousTag) {
+              const { data: comparison } = await github.rest.repos.compareCommits({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                base: previousTag,
+                head: release.tag_name
+              });
+              compareUrl = comparison.html_url;
+            }
+
+            const { data: commits } = await github.rest.repos.listCommits({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: release.tag_name,
+              since: previousTag ? tags[1].commit.sha : undefined,
+              per_page: 100
+            });
+
+            let releaseNotes = `## What's Changed\n\n`;
+
+            if (commits.length > 0) {
+              commits.reverse().forEach(commit => {
+                if (!commit.commit.message.startsWith('Merge')) {
+                  const message = commit.commit.message.split('\n')[0];
+                  releaseNotes += `* ${message} by @${commit.author?.login || 'unknown'}\n`;
+                }
+              });
+            } else {
+              releaseNotes += `* Initial release\n`;
+            }
+
+            if (compareUrl && previousTag) {
+              releaseNotes += `\n**Full Changelog**: ${compareUrl}`;
+            }
+
+            await github.rest.repos.updateRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: context.payload.release.id,
+              body: releaseNotes
+            });
