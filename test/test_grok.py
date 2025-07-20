@@ -207,7 +207,7 @@ def test_get_default_config():
         "model_name": "grok-3-fast",
         "max_tokens": 150,
         "api_key_env": "XAI_API_KEY",
-        "temperature": 0.0,
+        "temperature": 0.5,
         "system_prompt": SYSTEM_PROMPT,
     }
 

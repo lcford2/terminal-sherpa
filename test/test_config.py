@@ -6,6 +6,7 @@ from unittest.mock import patch
 import pytest
 
 from ask.config import (
+    check_ollama_available,
     get_config_path,
     get_default_model,
     get_default_provider,
@@ -114,6 +115,19 @@ def test_get_provider_config_with_model():
     assert provider_config["model_name"] == "claude-3-5-sonnet-20241022"
 
 
+def test_get_provider_config_with_model_fallback():
+    """Test provider:model syntax."""
+    config = {
+        "anthropic": {
+            "model_name": "claude-3-haiku-20240307",
+        }
+    }
+
+    provider_name, provider_config = get_provider_config(config, "anthropic:sonnet")
+    assert provider_name == "anthropic"
+    assert provider_config["model_name"] == "claude-3-haiku-20240307"
+
+
 def test_get_provider_config_nested():
     """Test nested provider configuration."""
     config = {
@@ -159,6 +173,32 @@ def test_get_default_provider_openai(mock_openai_key):
     assert get_default_provider() == "openai"
 
 
+def test_get_default_provider_gemini(mock_gemini_key):
+    """Test Gemini as default provider."""
+    assert get_default_provider() == "gemini"
+
+
+def test_get_default_provider_grok(mock_grok_key):
+    """Test Grok as default provider."""
+    assert get_default_provider() == "grok"
+
+
 def test_get_default_provider_none(mock_env_vars):
     """Test when no API keys available."""
-    assert get_default_provider() is None
+    with patch("ask.config.check_ollama_available", return_value=False):
+        assert get_default_provider() is None
+
+
+def test_get_default_provider_ollama(mock_env_vars):
+    """Test Ollama as default provider."""
+    with patch("ask.config.check_ollama_available", return_value=True):
+        assert get_default_provider() == "ollama"
+
+
+def test_check_ollama_available():
+    """Test check_ollama_available."""
+    with patch("ollama.list", return_value=["llama3.1:8b"]):
+        assert check_ollama_available() is True
+
+    with patch("ollama.list", side_effect=ConnectionError):
+        assert check_ollama_available() is False

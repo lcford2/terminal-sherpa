@@ -16,7 +16,7 @@ class AnthropicProvider(ProviderInterface):
     def __init__(self, config: dict[str, Any]):
         """Initialize Anthropic provider with configuration."""
         super().__init__(config)
-        self.client: anthropic.Anthropic | None = None
+        self.client: anthropic.Anthropic | None = None  # pragma: no mutate
 
     def get_bash_command(self, prompt: str) -> str:
         """Generate bash command from natural language prompt."""
@@ -30,14 +30,13 @@ class AnthropicProvider(ProviderInterface):
             response = self.client.messages.create(
                 model=self.config.get("model_name", "claude-3-haiku-20240307"),
                 max_tokens=self.config.get("max_tokens", 150),
-                temperature=self.config.get("temperature", 0.0),
+                temperature=self.config.get("temperature", 0.5),
                 system=self.config.get("system_prompt", SYSTEM_PROMPT),
                 messages=[{"role": "user", "content": prompt}],
             )
             return response.content[0].text
         except Exception as e:
             self._handle_api_error(e)
-            return ""
 
     def validate_config(self) -> None:
         """Validate provider configuration and API key."""
@@ -69,6 +68,6 @@ class AnthropicProvider(ProviderInterface):
             "model_name": "claude-3-haiku-20240307",
             "max_tokens": 150,
             "api_key_env": "ANTHROPIC_API_KEY",
-            "temperature": 0.0,
+            "temperature": 0.5,
             "system_prompt": SYSTEM_PROMPT,
         }

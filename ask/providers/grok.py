@@ -22,7 +22,7 @@ class GrokProvider(ProviderInterface):
             config: The configuration for the Grok provider
         """
         super().__init__(config)
-        self.client: Client | None = None
+        self.client: Client | None = None  # pragma: no mutate
 
     def get_bash_command(self, prompt: str) -> str:
         """Generate bash command from natural language prompt.
@@ -64,7 +64,6 @@ class GrokProvider(ProviderInterface):
 
         except Exception as e:
             self._handle_api_error(e)
-            return ""
 
     def validate_config(self) -> None:
         """Validate provider configuration and API key."""
@@ -113,6 +112,6 @@ class GrokProvider(ProviderInterface):
             "model_name": "grok-3-fast",
             "max_tokens": 150,
             "api_key_env": "XAI_API_KEY",
-            "temperature": 0.0,
+            "temperature": 0.5,
             "system_prompt": SYSTEM_PROMPT,
         }

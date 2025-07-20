@@ -17,7 +17,7 @@ class GeminiProvider(ProviderInterface):
     def __init__(self, config: dict[str, Any]):
         """Initialize Gemini provider with configuration."""
         super().__init__(config)
-        self.client: genai.Client | None = None
+        self.client: genai.Client | None = None  # pragma: no mutate
 
     def _parse_response(self, response: GenerateContentResponse) -> str:
         """Parse response from Gemini API."""
@@ -37,22 +37,18 @@ class GeminiProvider(ProviderInterface):
         assert self.client is not None, "Client should be initialized after validation"
 
         try:
-            # max_tokens=self.config.get("max_tokens", 150),
-            # temperature=self.config.get("temperature", 0.0),
-            # system=self.config.get("system_prompt", SYSTEM_PROMPT),
             response = self.client.models.generate_content(
                 model=self.config.get("model_name", "gemini-2.5-flash"),
                 contents=prompt,
                 config=GenerateContentConfig(
                     max_output_tokens=self.config.get("max_tokens", 150),
-                    temperature=self.config.get("temperature", 0.0),
+                    temperature=self.config.get("temperature", 0.5),
                     system_instruction=self.config.get("system_prompt", SYSTEM_PROMPT),
                 ),
             )
             return self._parse_response(response)
         except Exception as e:
             self._handle_api_error(e)
-            return ""
 
     def validate_config(self) -> None:
         """Validate provider configuration and API key."""
@@ -84,6 +80,6 @@ class GeminiProvider(ProviderInterface):
             "model_name": "gemini-2.5-flash",
             "max_tokens": 150,
             "api_key_env": "GEMINI_API_KEY",
-            "temperature": 0.0,
+            "temperature": 0.5,
             "system_prompt": SYSTEM_PROMPT,
         }

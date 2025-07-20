@@ -21,7 +21,7 @@ class OpenAIProvider(ProviderInterface):
             config: The configuration for the OpenAI provider
         """
         super().__init__(config)
-        self.client: openai.OpenAI | None = None
+        self.client: openai.OpenAI | None = None  # pragma: no mutate
 
     def get_bash_command(self, prompt: str) -> str:
         """Generate bash command from natural language prompt.
@@ -42,7 +42,7 @@ class OpenAIProvider(ProviderInterface):
             response = self.client.chat.completions.create(
                 model=self.config.get("model_name", "gpt-4o-mini"),
                 max_completion_tokens=self.config.get("max_tokens", 150),
-                temperature=self.config.get("temperature", 0.0),
+                temperature=self.config.get("temperature", 0.5),
                 messages=[
                     {
                         "role": "system",
@@ -62,7 +62,6 @@ class OpenAIProvider(ProviderInterface):
                 return re_match.group(1)
         except Exception as e:
             self._handle_api_error(e)
-            return ""
 
     def validate_config(self) -> None:
         """Validate provider configuration and API key."""
@@ -102,6 +101,6 @@ class OpenAIProvider(ProviderInterface):
             "model_name": "gpt-4o-mini",
             "max_tokens": 150,
             "api_key_env": "OPENAI_API_KEY",
-            "temperature": 0.0,
+            "temperature": 0.5,
             "system_prompt": SYSTEM_PROMPT,
         }

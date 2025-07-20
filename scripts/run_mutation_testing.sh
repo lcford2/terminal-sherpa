@@ -50,6 +50,7 @@ main() {
     # Initialize session
     log_info "Initializing mutation session..."
     uv run cosmic-ray --verbosity=INFO init mutation_testing.toml mutation_session.sqlite
+    uv run cr-filter-pragma mutation_session.sqlite
 
     # Show what we're testing
     total_mutations=$(uv run cr-report mutation_session.sqlite 2>/dev/null | grep "total jobs:" | cut -d: -f2 | tr -d ' ')

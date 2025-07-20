@@ -68,7 +68,7 @@ def test_get_default_config():
     assert default_config["model_name"] == "gpt-4o-mini"
     assert default_config["max_tokens"] == 150
     assert default_config["api_key_env"] == "OPENAI_API_KEY"
-    assert default_config["temperature"] == 0.0
+    assert default_config["temperature"] == 0.5
     assert default_config["system_prompt"] == SYSTEM_PROMPT
 
 
@@ -92,7 +92,7 @@ def test_get_bash_command_success(mock_openai_key):
         mock_client.chat.completions.create.assert_called_once_with(
             model="gpt-4o-mini",
             max_completion_tokens=150,
-            temperature=0.0,
+            temperature=0.5,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": "list files"},

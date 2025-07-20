@@ -1,10 +1,10 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=64", "setuptools-scm>=8", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "terminal-sherpa"
-version = "0.4.0"
+dynamic = ["version"]
 description = "AI-powered bash command generator"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -12,6 +12,7 @@ dependencies = [
     "anthropic>=0.7.0",
     "google-genai>=1.26.0",
     "loguru>=0.7.0",
+    "ollama>=0.3.0",
     "openai>=1.0.0",
     "setuptools>=80.9.0",
     "toml>=0.10.0",
@@ -47,6 +48,8 @@ dev = [
     "cosmic-ray>=8.3.4",
     "mutatest>=3.1.0",
     "pre-commit>=4.0.0",
+    "ipdb>=0.13.13",
+    "setuptools-scm>=8.0.0",
 ]
 
 [project.urls]
@@ -58,6 +61,7 @@ ask = "ask.main:main"
 
 [tool.taskipy.tasks]
 test = "pytest test/ --cov=ask --cov-report=html --cov-report=term"
+test-verbose = "pytest test/ --cov=ask --cov-report=html --cov-report=term -s -v"
 mutation-test = "scripts/run_mutation_testing.sh"
 setup = "pre-commit install"
 install = "uv sync"
@@ -109,3 +113,7 @@ convention = "google"
 
 [tool.coverage.run]
 source = ["ask"]
+
+[tool.setuptools_scm]
+# Optional: write version to a file for runtime access
+version_file = "ask/_version.py"

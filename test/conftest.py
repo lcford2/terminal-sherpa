@@ -4,7 +4,7 @@ import os
 import tempfile
 from collections.abc import Generator
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -70,3 +70,21 @@ def mock_both_keys():
         },
     ):
         yield
+
+
+@pytest.fixture
+def mock_ollama_server():
+    """Mock Ollama server for testing."""
+    with patch("ollama.Client") as mock_client_class:
+        mock_client = MagicMock()
+        mock_client_class.return_value = mock_client
+
+        # Mock successful list() call
+        mock_client.list.return_value = {
+            "models": [
+                {"name": "llama3.2"},
+                {"name": "codellama"},
+            ]
+        }
+
+        yield mock_client
