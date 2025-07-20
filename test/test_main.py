@@ -143,6 +143,22 @@ def test_resolve_provider_no_keys():
                 mock_logger.error.assert_called()
 
 
+def test_resolve_provider_config_error():
+    """Test config error handling."""
+    args = argparse.Namespace(model="anthropic:sonnet")
+    config_data = {}
+
+    with patch("ask.config.get_provider_config", return_value=("anthropic", {})):
+        with patch(
+            "ask.providers.get_provider", side_effect=ConfigurationError("Config error")
+        ) as mock_get_provider:
+            with patch("ask.main.logger"):
+                with pytest.raises(SystemExit):
+                    resolve_provider(args, config_data)
+
+                mock_get_provider.assert_called_once_with("anthropic", {})
+
+
 def test_main_success():
     """Test successful main function execution."""
     mock_provider = MagicMock()
