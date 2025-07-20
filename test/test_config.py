@@ -161,4 +161,11 @@ def test_get_default_provider_openai(mock_openai_key):
 
 def test_get_default_provider_none(mock_env_vars):
     """Test when no API keys available."""
-    assert get_default_provider() is None
+    with patch("ask.config.check_ollama_available", return_value=False):
+        assert get_default_provider() is None
+
+
+def test_get_default_provider_ollama(mock_env_vars):
+    """Test Ollama as default provider."""
+    with patch("ask.config.check_ollama_available", return_value=True):
+        assert get_default_provider() == "ollama"

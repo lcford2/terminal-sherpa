@@ -4,6 +4,7 @@ from .anthropic import AnthropicProvider
 from .base import ProviderInterface
 from .gemini import GeminiProvider
 from .grok import GrokProvider
+from .ollama import OllamaProvider
 from .openai import OpenAIProvider
 
 # Provider registry - maps provider names to their classes
@@ -37,3 +38,4 @@ register_provider("anthropic", AnthropicProvider)
 register_provider("openai", OpenAIProvider)
 register_provider("gemini", GeminiProvider)
 register_provider("grok", GrokProvider)
+register_provider("ollama", OllamaProvider)

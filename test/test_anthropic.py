@@ -67,7 +67,7 @@ def test_get_default_config():
     assert default_config["model_name"] == "claude-3-haiku-20240307"
     assert default_config["max_tokens"] == 150
     assert default_config["api_key_env"] == "ANTHROPIC_API_KEY"
-    assert default_config["temperature"] == 0.0
+    assert default_config["temperature"] == 0.5
     assert default_config["system_prompt"] == SYSTEM_PROMPT
 
 
@@ -90,7 +90,7 @@ def test_get_bash_command_success(mock_anthropic_key):
         mock_client.messages.create.assert_called_once_with(
             model="claude-3-haiku-20240307",
             max_tokens=150,
-            temperature=0.0,
+            temperature=0.5,
             system=SYSTEM_PROMPT,
             messages=[{"role": "user", "content": "list files"}],
         )

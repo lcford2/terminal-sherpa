@@ -35,7 +35,7 @@ find . -name "*.py" -mtime -7
 ## ✨ Features
 
 - **Natural language to bash conversion** - Describe what you want, get the command
-- **Multiple AI provider support** - Choose between Anthropic (Claude), OpenAI (GPT), Google (Gemini), and xAI (Grok) models
+- **Multiple AI provider support** - Choose between Anthropic (Claude), OpenAI (GPT), Google (Gemini), xAI (Grok) models, and local models via Ollama
 - **Flexible configuration system** - Set defaults, customize models, and manage API keys
 - **XDG-compliant config files** - Follows standard configuration file locations
 - **Verbose logging support** - Debug and understand what's happening under the hood
@@ -45,7 +45,7 @@ find . -name "*.py" -mtime -7
 ### Requirements
 
 - Python 3.9+
-- API key for Anthropic, OpenAI, Google, or xAI
+- API key for Anthropic, OpenAI, Google, or xAI (or local Ollama installation)
 
 ### Install Methods
 
@@ -88,6 +88,8 @@ ask "your natural language prompt"
 |                          |                            | `ask --model gemini "list files"`           |
 |                          |                            | `ask --model gemini:pro "list files"`       |
 |                          |                            | `ask --model grok "list files"`             |
+|                          |                            | `ask --model ollama "list files"`           |
+|                          |                            | `ask --model ollama:codellama "list files"` |
 | `--verbose`              | Enable verbose logging     | `ask --verbose "compress this folder"`      |
 
 ### Practical Examples
@@ -192,7 +194,15 @@ max_tokens = 1024
 [grok]
 model = "grok-3-fast"
 max_tokens = 150
-temperature = 0.0
+temperature = 0.5
+
+[ollama]
+model = "llama3.2"
+host = "localhost"
+port = 11434
+
+[ollama.codellama]
+model = "codellama"
 ```
 
 ## 🤖 Supported Providers
@@ -201,14 +211,30 @@ temperature = 0.0
 - OpenAI (GPT)
 - Google (Gemini)
 - xAI (Grok)
+- Ollama (Local Models)
 
 > **Note:** Get API keys from [Anthropic Console](https://console.anthropic.com/), [OpenAI Platform](https://platform.openai.com/), [Google AI Studio](https://aistudio.google.com/), or [xAI Console](https://x.ai/console)
+
+### Local Models with Ollama
+
+For local inference without API costs:
+
+1. **Install Ollama:** Visit [ollama.ai](https://ollama.ai) for installation instructions
+2. **Pull a model:** `ollama pull llama3.2`
+3. **Start Ollama:** `ollama serve` (if not auto-started)
+4. **Use with ask:** `ask --model ollama "your prompt"`
+
+**Example:**
+```bash
+ollama pull codellama
+ask --model ollama:codellama "optimize this bash script"
+```
 
 ## 🛣️ Roadmap
 
 - [ ] Shell integration and auto-completion
 - [ ] Additional providers (Cohere, Mistral)
-- [ ] Local model support (Ollama, llama.cpp)
+- [ ] Additional local model support (llama.cpp)
 
 ## 🔧 Development
 

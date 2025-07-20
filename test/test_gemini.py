@@ -68,7 +68,7 @@ def test_get_default_config():
     assert default_config["model_name"] == "gemini-2.5-flash"
     assert default_config["max_tokens"] == 150
     assert default_config["api_key_env"] == "GEMINI_API_KEY"
-    assert default_config["temperature"] == 0.0
+    assert default_config["temperature"] == 0.5
     assert default_config["system_prompt"] == SYSTEM_PROMPT
 
 
@@ -140,7 +140,7 @@ def test_get_bash_command_success(mock_gemini_key):
             contents="list files",
             config=GenerateContentConfig(
                 max_output_tokens=150,
-                temperature=0.0,
+                temperature=0.5,
                 system_instruction=SYSTEM_PROMPT,
             ),
         )
