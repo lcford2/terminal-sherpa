@@ -6,6 +6,7 @@ from unittest.mock import patch
 import pytest
 
 from ask.config import (
+    SYSTEM_PROMPT,
     check_ollama_available,
     get_config_path,
     get_default_model,
@@ -14,6 +15,11 @@ from ask.config import (
     load_config,
 )
 from ask.exceptions import ConfigurationError
+
+
+def test_system_prompt_type():
+    """Test system prompt type."""
+    assert isinstance(SYSTEM_PROMPT, str)
 
 
 def test_get_config_path_xdg_config_home(temp_config_dir):
