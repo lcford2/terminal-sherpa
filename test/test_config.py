@@ -189,6 +189,11 @@ def test_get_default_provider_grok(mock_grok_key):
     assert get_default_provider() == "grok"
 
 
+def test_get_default_provider_openrouter(mock_openrouter_key):
+    """Test OpenRouter as default provider."""
+    assert get_default_provider() == "openrouter"
+
+
 def test_get_default_provider_none(mock_env_vars):
     """Test when no API keys available."""
     with patch("ask.config.check_ollama_available", return_value=False):
