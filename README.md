@@ -245,6 +245,30 @@ with a named sub-config (see the example configuration above) or by setting
 slug](https://openrouter.ai/models) (e.g. `anthropic/claude-3.5-sonnet`,
 `openai/gpt-4o`, `meta-llama/llama-3.1-8b-instruct:free`).
 
+#### Reasoning models
+
+Some models route through OpenRouter with "thinking"/reasoning enabled by
+default, which spends part of your `max_tokens` budget on hidden reasoning
+before producing a response — with a low `max_tokens`, this can leave no
+room for the actual answer. Set `reasoning_effort` in your config to control
+this:
+
+```toml
+[openrouter.gemini]
+model_name = "google/gemini-3.7-flash"
+reasoning_effort = "low"   # "high" | "medium" | "low" | "none", depending on the model
+
+[openrouter.claude]
+model_name = "anthropic/claude-haiku-4.5"
+reasoning_effort = "none"  # fully disable reasoning, where supported
+```
+
+Support for `"none"` and the available effort levels vary by model — some
+models require reasoning and reject `"none"`. Check a model's
+`supported_parameters` and `reasoning.mandatory` fields at
+[openrouter.ai/api/v1/models](https://openrouter.ai/api/v1/models) to see
+what it allows.
+
 ### Local Models with Ollama
 
 For local inference without API costs:

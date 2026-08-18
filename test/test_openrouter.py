@@ -108,6 +108,7 @@ def test_get_default_config():
     assert default_config["base_url"] == OPENROUTER_BASE_URL
     assert default_config["temperature"] == 0.5
     assert default_config["system_prompt"] == SYSTEM_PROMPT
+    assert default_config["reasoning_effort"] is None
 
 
 def test_get_bash_command_success(mock_openrouter_key):
@@ -136,6 +137,53 @@ def test_get_bash_command_success(mock_openrouter_key):
             tools=[BASH_COMMAND_TOOL],
             tool_choice=BASH_COMMAND_TOOL_CHOICE,
         )
+
+
+def test_get_bash_command_with_reasoning_effort(mock_openrouter_key):
+    """Test that a configured reasoning_effort is passed through as extra_body."""
+    config = {"model_name": "google/gemini-3.7-flash", "reasoning_effort": "low"}
+    provider = OpenRouterProvider(config)
+
+    mock_response = _mock_tool_call_response({"command": "ls -la"})
+
+    with patch("openai.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        result = provider.get_bash_command("list files")
+
+        assert result == "ls -la"
+        mock_client.chat.completions.create.assert_called_once_with(
+            model="google/gemini-3.7-flash",
+            max_completion_tokens=150,
+            temperature=0.5,
+            messages=[
+                {"role": "system", "content": SYSTEM_PROMPT},
+                {"role": "user", "content": "list files"},
+            ],
+            tools=[BASH_COMMAND_TOOL],
+            tool_choice=BASH_COMMAND_TOOL_CHOICE,
+            extra_body={"reasoning": {"effort": "low"}},
+        )
+
+
+def test_get_bash_command_no_reasoning_effort_omits_extra_body(mock_openrouter_key):
+    """Test that extra_body is omitted entirely when reasoning_effort isn't set."""
+    config = {}
+    provider = OpenRouterProvider(config)
+
+    mock_response = _mock_tool_call_response({"command": "ls -la"})
+
+    with patch("openai.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        provider.get_bash_command("list files")
+
+        _, kwargs = mock_client.chat.completions.create.call_args
+        assert "extra_body" not in kwargs
 
 
 def test_get_bash_command_strips_whitespace(mock_openrouter_key):
