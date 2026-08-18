@@ -16,7 +16,9 @@ from ask.providers.openrouter import (
 )
 
 
-def _mock_tool_call_response(arguments: dict) -> MagicMock:
+def _mock_tool_call_response(
+    arguments: dict, usage: MagicMock | None = None
+) -> MagicMock:
     """Build a mock response containing a single forced tool call."""
     mock_tool_call = MagicMock()
     mock_tool_call.function.arguments = json.dumps(arguments)
@@ -24,6 +26,7 @@ def _mock_tool_call_response(arguments: dict) -> MagicMock:
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.tool_calls = [mock_tool_call]
+    mock_response.usage = usage
     return mock_response
 
 
@@ -211,6 +214,7 @@ def test_get_bash_command_no_tool_calls(mock_openrouter_key):
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.tool_calls = None
+    mock_response.usage = None
 
     with patch("openai.OpenAI") as mock_openai:
         mock_client = MagicMock()
@@ -248,6 +252,7 @@ def test_get_bash_command_invalid_json(mock_openrouter_key):
     mock_response = MagicMock()
     mock_response.choices = [MagicMock()]
     mock_response.choices[0].message.tool_calls = [mock_tool_call]
+    mock_response.usage = None
 
     with patch("openai.OpenAI") as mock_openai:
         mock_client = MagicMock()
@@ -276,6 +281,74 @@ def test_get_bash_command_auto_validate(mock_openrouter_key):
 
         assert provider.client is not None
         assert result == "ls -la"
+
+
+def test_get_bash_command_logs_usage_and_cost(mock_openrouter_key):
+    """Test that token usage and cost are logged at debug level when present."""
+    config = {}
+    provider = OpenRouterProvider(config)
+
+    mock_usage = MagicMock()
+    mock_usage.prompt_tokens = 111
+    mock_usage.completion_tokens = 32
+    mock_usage.cost = 0.000101625
+
+    mock_response = _mock_tool_call_response({"command": "ls -la"}, usage=mock_usage)
+
+    with patch("openai.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        with patch("ask.providers.openrouter.module_logger") as mock_logger:
+            provider.get_bash_command("list files")
+
+            mock_logger.debug.assert_called_once_with(
+                "OpenRouter usage: 111 prompt + 32 completion tokens, "
+                "cost: $0.000102"
+            )
+
+
+def test_get_bash_command_no_usage_skips_logging(mock_openrouter_key):
+    """Test that no debug log is emitted when the response has no usage info."""
+    config = {}
+    provider = OpenRouterProvider(config)
+
+    mock_response = _mock_tool_call_response({"command": "ls -la"}, usage=None)
+
+    with patch("openai.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        with patch("ask.providers.openrouter.module_logger") as mock_logger:
+            provider.get_bash_command("list files")
+
+            mock_logger.debug.assert_not_called()
+
+
+def test_get_bash_command_usage_without_cost(mock_openrouter_key):
+    """Test that usage without a cost field is still logged, marked unknown."""
+    config = {}
+    provider = OpenRouterProvider(config)
+
+    mock_usage = MagicMock(spec=["prompt_tokens", "completion_tokens"])
+    mock_usage.prompt_tokens = 10
+    mock_usage.completion_tokens = 5
+
+    mock_response = _mock_tool_call_response({"command": "ls -la"}, usage=mock_usage)
+
+    with patch("openai.OpenAI") as mock_openai:
+        mock_client = MagicMock()
+        mock_client.chat.completions.create.return_value = mock_response
+        mock_openai.return_value = mock_client
+
+        with patch("ask.providers.openrouter.module_logger") as mock_logger:
+            provider.get_bash_command("list files")
+
+            mock_logger.debug.assert_called_once_with(
+                "OpenRouter usage: 10 prompt + 5 completion tokens, cost: unknown"
+            )
 
 
 def test_handle_api_error_auth():
