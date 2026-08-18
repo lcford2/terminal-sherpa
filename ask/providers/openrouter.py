@@ -5,10 +5,13 @@ import os
 from typing import Any, NoReturn
 
 import openai
+from loguru import logger
 
 from ask.config import SYSTEM_PROMPT
 from ask.exceptions import APIError, AuthenticationError, RateLimitError
 from ask.providers.base import ProviderInterface
+
+module_logger = logger.bind(module=__name__)
 
 OPENROUTER_BASE_URL = "https://openrouter.ai/api/v1"
 
@@ -89,6 +92,7 @@ class OpenRouterProvider(ProviderInterface):
 
         try:
             response = self.client.chat.completions.create(**create_kwargs)
+            self._log_usage(response.usage)
             tool_calls = response.choices[0].message.tool_calls
             if not tool_calls:
                 raise APIError("Error: API returned empty response")
@@ -105,6 +109,22 @@ class OpenRouterProvider(ProviderInterface):
             return command.strip()
         except Exception as e:
             self._handle_api_error(e)
+
+    def _log_usage(self, usage: Any) -> None:
+        """Log token usage and cost for the request, if OpenRouter provided them.
+
+        Args:
+            usage: The `usage` object from the chat completion response
+        """
+        if usage is None:
+            return
+
+        cost = getattr(usage, "cost", None)
+        cost_str = f"${cost:.6f}" if cost is not None else "unknown"
+        module_logger.debug(
+            f"OpenRouter usage: {usage.prompt_tokens} prompt + "
+            f"{usage.completion_tokens} completion tokens, cost: {cost_str}"
+        )
 
     def validate_config(self) -> None:
         """Validate provider configuration and API key."""
