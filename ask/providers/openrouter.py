@@ -68,21 +68,27 @@ class OpenRouterProvider(ProviderInterface):
         # After validate_config(), client should be set
         assert self.client is not None, "Client should be initialized after validation"
 
+        create_kwargs: dict[str, Any] = {
+            "model": self.config.get("model_name", "openrouter/auto"),
+            "max_completion_tokens": self.config.get("max_tokens", 150),
+            "temperature": self.config.get("temperature", 0.5),
+            "messages": [
+                {
+                    "role": "system",
+                    "content": self.config.get("system_prompt", SYSTEM_PROMPT),
+                },
+                {"role": "user", "content": prompt},
+            ],
+            "tools": [BASH_COMMAND_TOOL],
+            "tool_choice": BASH_COMMAND_TOOL_CHOICE,
+        }
+
+        reasoning_effort = self.config.get("reasoning_effort")
+        if reasoning_effort:
+            create_kwargs["extra_body"] = {"reasoning": {"effort": reasoning_effort}}
+
         try:
-            response = self.client.chat.completions.create(
-                model=self.config.get("model_name", "openrouter/auto"),
-                max_completion_tokens=self.config.get("max_tokens", 150),
-                temperature=self.config.get("temperature", 0.5),
-                messages=[
-                    {
-                        "role": "system",
-                        "content": self.config.get("system_prompt", SYSTEM_PROMPT),
-                    },
-                    {"role": "user", "content": prompt},
-                ],
-                tools=[BASH_COMMAND_TOOL],
-                tool_choice=BASH_COMMAND_TOOL_CHOICE,
-            )
+            response = self.client.chat.completions.create(**create_kwargs)
             tool_calls = response.choices[0].message.tool_calls
             if not tool_calls:
                 raise APIError("Error: API returned empty response")
@@ -142,4 +148,5 @@ class OpenRouterProvider(ProviderInterface):
             "base_url": OPENROUTER_BASE_URL,
             "temperature": 0.5,
             "system_prompt": SYSTEM_PROMPT,
+            "reasoning_effort": None,
         }
