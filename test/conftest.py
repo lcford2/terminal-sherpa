@@ -60,6 +60,15 @@ def mock_grok_key():
 
 
 @pytest.fixture
+def mock_openrouter_key():
+    """Mock OpenRouter API key in environment."""
+    with patch.dict(
+        os.environ, {"OPENROUTER_API_KEY": "test-openrouter-key"}, clear=True
+    ):
+        yield
+
+
+@pytest.fixture
 def mock_both_keys():
     """Mock both API keys in environment."""
     with patch.dict(

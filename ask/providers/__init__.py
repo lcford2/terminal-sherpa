@@ -6,6 +6,7 @@ from .gemini import GeminiProvider
 from .grok import GrokProvider
 from .ollama import OllamaProvider
 from .openai import OpenAIProvider
+from .openrouter import OpenRouterProvider
 
 # Provider registry - maps provider names to their classes
 _PROVIDER_REGISTRY: dict[str, type[ProviderInterface]] = {}
@@ -39,3 +40,4 @@ register_provider("openai", OpenAIProvider)
 register_provider("gemini", GeminiProvider)
 register_provider("grok", GrokProvider)
 register_provider("ollama", OllamaProvider)
+register_provider("openrouter", OpenRouterProvider)

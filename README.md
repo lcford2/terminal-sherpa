@@ -35,7 +35,7 @@ find . -name "*.py" -mtime -7
 ## ✨ Features
 
 - **Natural language to bash conversion** - Describe what you want, get the command
-- **Multiple AI provider support** - Choose between Anthropic (Claude), OpenAI (GPT), Google (Gemini), xAI (Grok) models, and local models via Ollama
+- **Multiple AI provider support** - Choose between Anthropic (Claude), OpenAI (GPT), Google (Gemini), xAI (Grok), OpenRouter (100+ models), and local models via Ollama
 - **Flexible configuration system** - Set defaults, customize models, and manage API keys
 - **XDG-compliant config files** - Follows standard configuration file locations
 - **Verbose logging support** - Debug and understand what's happening under the hood
@@ -88,6 +88,8 @@ ask "your natural language prompt"
 |                          |                            | `ask --model gemini "list files"`           |
 |                          |                            | `ask --model gemini:pro "list files"`       |
 |                          |                            | `ask --model grok "list files"`             |
+|                          |                            | `ask --model openrouter "list files"`       |
+|                          |                            | `ask --model openrouter:claude "list files"`|
 |                          |                            | `ask --model ollama "list files"`           |
 |                          |                            | `ask --model ollama:codellama "list files"` |
 | `--verbose`              | Enable verbose logging     | `ask --verbose "compress this folder"`      |
@@ -161,6 +163,7 @@ export ANTHROPIC_API_KEY="your-anthropic-key"
 export OPENAI_API_KEY="your-openai-key"
 export GEMINI_API_KEY="your-gemini-key"
 export XAI_API_KEY="your-xai-key"
+export OPENROUTER_API_KEY="your-openrouter-key"
 ```
 
 ### Example Configuration File
@@ -169,7 +172,7 @@ Create `~/.config/ask/config.toml`:
 
 ```toml
 [ask]
-default_model = "anthropic"
+default_model = "openrouter"
 
 [anthropic]
 model = "claude-3-haiku-20240307"
@@ -196,6 +199,14 @@ model = "grok-3-fast"
 max_tokens = 150
 temperature = 0.5
 
+[openrouter]
+model = "openrouter/auto"
+max_tokens = 150
+temperature = 0.5
+
+[openrouter.claude]
+model = "anthropic/claude-3.5-sonnet"
+
 [ollama]
 model = "llama3.2"
 host = "localhost"
@@ -211,9 +222,28 @@ model = "codellama"
 - OpenAI (GPT)
 - Google (Gemini)
 - xAI (Grok)
+- OpenRouter (100+ models from many providers)
 - Ollama (Local Models)
 
-> **Note:** Get API keys from [Anthropic Console](https://console.anthropic.com/), [OpenAI Platform](https://platform.openai.com/), [Google AI Studio](https://aistudio.google.com/), or [xAI Console](https://x.ai/console)
+> **Note:** Get API keys from [Anthropic Console](https://console.anthropic.com/), [OpenAI Platform](https://platform.openai.com/), [Google AI Studio](https://aistudio.google.com/), [xAI Console](https://x.ai/console), or [OpenRouter](https://openrouter.ai/keys)
+
+### Using OpenRouter
+
+[OpenRouter](https://openrouter.ai) gives you access to models from many
+providers (Anthropic, OpenAI, Meta, Mistral, and more) through a single
+OpenAI-compatible API and API key:
+
+```bash
+export OPENROUTER_API_KEY="your-openrouter-key"
+ask --model openrouter "list files"
+```
+
+By default, `openrouter` uses OpenRouter's `openrouter/auto` model, which
+automatically routes your prompt to a suitable model. Pin a specific model
+with a named sub-config (see the example configuration above) or by setting
+`model_name` directly, using any [OpenRouter model
+slug](https://openrouter.ai/models) (e.g. `anthropic/claude-3.5-sonnet`,
+`openai/gpt-4o`, `meta-llama/llama-3.1-8b-instruct:free`).
 
 ### Local Models with Ollama
 

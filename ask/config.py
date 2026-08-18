@@ -116,6 +116,8 @@ def get_default_provider() -> str | None:  # pragma: no mutate
         return "gemini"
     elif os.environ.get("XAI_API_KEY"):
         return "grok"
+    elif os.environ.get("OPENROUTER_API_KEY"):
+        return "openrouter"
     elif check_ollama_available():
         return "ollama"
 
